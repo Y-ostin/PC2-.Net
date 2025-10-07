@@ -13,4 +13,9 @@ public class ClientRepository : Repository<Client>, IClientRepository
     {
         return await _dbSet.FirstOrDefaultAsync(c => c.Email == email);
     }
+
+    public async Task<IEnumerable<Client>> GetClientsByNameStartingWithAsync(string prefix)
+    {
+        return await _dbSet.Where(c => c.Name.StartsWith(prefix)).ToListAsync();
+    }
 }

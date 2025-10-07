@@ -1,4 +1,4 @@
-using S8_Yostin_Arequipa.Data.Repositories;
+using S8_Yostin_Arequipa.Data.UnitOfWork;
 using S8_Yostin_Arequipa.DTOs;
 using S8_Yostin_Arequipa.Models;
 using S8_Yostin_Arequipa.Services.Interfaces;
@@ -7,16 +7,16 @@ namespace S8_Yostin_Arequipa.Services;
 
 public class ClientService : IClientService
 {
-    private readonly IClientRepository _clientRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public ClientService(IClientRepository clientRepository)
+    public ClientService(IUnitOfWork unitOfWork)
     {
-        _clientRepository = clientRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<IEnumerable<ClientDto>> GetAllClientsAsync()
     {
-        var clients = await _clientRepository.GetAllAsync();
+        var clients = await _unitOfWork.Clients.GetAllAsync();
         return clients.Select(c => new ClientDto
         {
             ClientId = c.ClientId,
@@ -27,7 +27,7 @@ public class ClientService : IClientService
 
     public async Task<ClientDto?> GetClientByIdAsync(int id)
     {
-        var client = await _clientRepository.GetByIdAsync(id);
+        var client = await _unitOfWork.Clients.GetByIdAsync(id);
         if (client == null) return null;
         return new ClientDto
         {
@@ -39,7 +39,7 @@ public class ClientService : IClientService
 
     public async Task<ClientDto?> GetClientByEmailAsync(string email)
     {
-        var client = await _clientRepository.GetByEmailAsync(email);
+        var client = await _unitOfWork.Clients.GetByEmailAsync(email);
         if (client == null) return null;
         return new ClientDto
         {
@@ -56,29 +56,40 @@ public class ClientService : IClientService
             Name = clientDto.Name,
             Email = clientDto.Email
         };
-        await _clientRepository.AddAsync(client);
-        await _clientRepository.SaveChangesAsync();
+        await _unitOfWork.Clients.AddAsync(client);
+        await _unitOfWork.SaveChangesAsync();
     }
 
     public async Task UpdateClientAsync(ClientDto clientDto)
     {
-        var client = await _clientRepository.GetByIdAsync(clientDto.ClientId);
+        var client = await _unitOfWork.Clients.GetByIdAsync(clientDto.ClientId);
         if (client != null)
         {
             client.Name = clientDto.Name;
             client.Email = clientDto.Email;
-            await _clientRepository.UpdateAsync(client);
-            await _clientRepository.SaveChangesAsync();
+            await _unitOfWork.Clients.UpdateAsync(client);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 
     public async Task DeleteClientAsync(int id)
     {
-        var client = await _clientRepository.GetByIdAsync(id);
+        var client = await _unitOfWork.Clients.GetByIdAsync(id);
         if (client != null)
         {
-            await _clientRepository.DeleteAsync(client);
-            await _clientRepository.SaveChangesAsync();
+            await _unitOfWork.Clients.DeleteAsync(client);
+            await _unitOfWork.SaveChangesAsync();
         }
+    }
+
+    public async Task<IEnumerable<ClientDto>> GetClientsByNameStartingWithAsync(string prefix)
+    {
+        var clients = await _unitOfWork.Clients.GetClientsByNameStartingWithAsync(prefix);
+        return clients.Select(c => new ClientDto
+        {
+            ClientId = c.ClientId,
+            Name = c.Name,
+            Email = c.Email
+        });
     }
 }

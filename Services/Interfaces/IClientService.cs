@@ -7,6 +7,7 @@ public interface IClientService
     Task<IEnumerable<ClientDto>> GetAllClientsAsync();
     Task<ClientDto?> GetClientByIdAsync(int id);
     Task<ClientDto?> GetClientByEmailAsync(string email);
+    Task<IEnumerable<ClientDto>> GetClientsByNameStartingWithAsync(string prefix);
     Task AddClientAsync(ClientDto clientDto);
     Task UpdateClientAsync(ClientDto clientDto);
     Task DeleteClientAsync(int id);

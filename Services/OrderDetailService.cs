@@ -1,4 +1,4 @@
-using S8_Yostin_Arequipa.Data.Repositories;
+using S8_Yostin_Arequipa.Data.UnitOfWork;
 using S8_Yostin_Arequipa.DTOs;
 using S8_Yostin_Arequipa.Models;
 using S8_Yostin_Arequipa.Services.Interfaces;
@@ -7,16 +7,16 @@ namespace S8_Yostin_Arequipa.Services;
 
 public class OrderDetailService : IOrderDetailService
 {
-    private readonly IOrderDetailRepository _orderDetailRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public OrderDetailService(IOrderDetailRepository orderDetailRepository)
+    public OrderDetailService(IUnitOfWork unitOfWork)
     {
-        _orderDetailRepository = orderDetailRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<IEnumerable<OrderDetailDto>> GetAllOrderDetailsAsync()
     {
-        var orderDetails = await _orderDetailRepository.GetAllAsync();
+        var orderDetails = await _unitOfWork.OrderDetails.GetAllAsync();
         return orderDetails.Select(od => new OrderDetailDto
         {
             OrderDetailId = od.OrderDetailId,
@@ -28,7 +28,7 @@ public class OrderDetailService : IOrderDetailService
 
     public async Task<OrderDetailDto?> GetOrderDetailByIdAsync(int id)
     {
-        var orderDetail = await _orderDetailRepository.GetByIdAsync(id);
+        var orderDetail = await _unitOfWork.OrderDetails.GetByIdAsync(id);
         if (orderDetail == null) return null;
         return new OrderDetailDto
         {
@@ -41,7 +41,7 @@ public class OrderDetailService : IOrderDetailService
 
     public async Task<IEnumerable<OrderDetailDto>> GetOrderDetailsByOrderIdAsync(int orderId)
     {
-        var orderDetails = await _orderDetailRepository.GetDetailsByOrderIdAsync(orderId);
+        var orderDetails = await _unitOfWork.OrderDetails.GetDetailsByOrderIdAsync(orderId);
         return orderDetails.Select(od => new OrderDetailDto
         {
             OrderDetailId = od.OrderDetailId,
@@ -59,30 +59,30 @@ public class OrderDetailService : IOrderDetailService
             ProductId = orderDetailDto.ProductId,
             Quantity = orderDetailDto.Quantity
         };
-        await _orderDetailRepository.AddAsync(orderDetail);
-        await _orderDetailRepository.SaveChangesAsync();
+        await _unitOfWork.OrderDetails.AddAsync(orderDetail);
+        await _unitOfWork.SaveChangesAsync();
     }
 
     public async Task UpdateOrderDetailAsync(OrderDetailDto orderDetailDto)
     {
-        var orderDetail = await _orderDetailRepository.GetByIdAsync(orderDetailDto.OrderDetailId);
+        var orderDetail = await _unitOfWork.OrderDetails.GetByIdAsync(orderDetailDto.OrderDetailId);
         if (orderDetail != null)
         {
             orderDetail.OrderId = orderDetailDto.OrderId;
             orderDetail.ProductId = orderDetailDto.ProductId;
             orderDetail.Quantity = orderDetailDto.Quantity;
-            await _orderDetailRepository.UpdateAsync(orderDetail);
-            await _orderDetailRepository.SaveChangesAsync();
+            await _unitOfWork.OrderDetails.UpdateAsync(orderDetail);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 
     public async Task DeleteOrderDetailAsync(int id)
     {
-        var orderDetail = await _orderDetailRepository.GetByIdAsync(id);
+        var orderDetail = await _unitOfWork.OrderDetails.GetByIdAsync(id);
         if (orderDetail != null)
         {
-            await _orderDetailRepository.DeleteAsync(orderDetail);
-            await _orderDetailRepository.SaveChangesAsync();
+            await _unitOfWork.OrderDetails.DeleteAsync(orderDetail);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

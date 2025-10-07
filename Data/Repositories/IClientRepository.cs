@@ -6,4 +6,5 @@ public interface IClientRepository : IRepository<Client>
 {
     // Métodos específicos para Client si es necesario
     Task<Client?> GetByEmailAsync(string email);
+    Task<IEnumerable<Client>> GetClientsByNameStartingWithAsync(string prefix);
 }

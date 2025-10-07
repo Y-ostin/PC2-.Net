@@ -1,4 +1,4 @@
-using S8_Yostin_Arequipa.Data.Repositories;
+using S8_Yostin_Arequipa.Data.UnitOfWork;
 using S8_Yostin_Arequipa.DTOs;
 using S8_Yostin_Arequipa.Models;
 using S8_Yostin_Arequipa.Services.Interfaces;
@@ -7,16 +7,16 @@ namespace S8_Yostin_Arequipa.Services;
 
 public class OrderService : IOrderService
 {
-    private readonly IOrderRepository _orderRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public OrderService(IOrderRepository orderRepository)
+    public OrderService(IUnitOfWork unitOfWork)
     {
-        _orderRepository = orderRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<IEnumerable<OrderDto>> GetAllOrdersAsync()
     {
-        var orders = await _orderRepository.GetAllAsync();
+        var orders = await _unitOfWork.Orders.GetAllAsync();
         return orders.Select(o => new OrderDto
         {
             OrderId = o.OrderId,
@@ -27,7 +27,7 @@ public class OrderService : IOrderService
 
     public async Task<OrderDto?> GetOrderByIdAsync(int id)
     {
-        var order = await _orderRepository.GetByIdAsync(id);
+        var order = await _unitOfWork.Orders.GetByIdAsync(id);
         if (order == null) return null;
         return new OrderDto
         {
@@ -39,7 +39,7 @@ public class OrderService : IOrderService
 
     public async Task<IEnumerable<OrderDto>> GetOrdersByClientIdAsync(int clientId)
     {
-        var orders = await _orderRepository.GetOrdersByClientIdAsync(clientId);
+        var orders = await _unitOfWork.Orders.GetOrdersByClientIdAsync(clientId);
         return orders.Select(o => new OrderDto
         {
             OrderId = o.OrderId,
@@ -55,29 +55,29 @@ public class OrderService : IOrderService
             ClientId = orderDto.ClientId,
             OrderDate = orderDto.OrderDate
         };
-        await _orderRepository.AddAsync(order);
-        await _orderRepository.SaveChangesAsync();
+        await _unitOfWork.Orders.AddAsync(order);
+        await _unitOfWork.SaveChangesAsync();
     }
 
     public async Task UpdateOrderAsync(OrderDto orderDto)
     {
-        var order = await _orderRepository.GetByIdAsync(orderDto.OrderId);
+        var order = await _unitOfWork.Orders.GetByIdAsync(orderDto.OrderId);
         if (order != null)
         {
             order.ClientId = orderDto.ClientId;
             order.OrderDate = orderDto.OrderDate;
-            await _orderRepository.UpdateAsync(order);
-            await _orderRepository.SaveChangesAsync();
+            await _unitOfWork.Orders.UpdateAsync(order);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 
     public async Task DeleteOrderAsync(int id)
     {
-        var order = await _orderRepository.GetByIdAsync(id);
+        var order = await _unitOfWork.Orders.GetByIdAsync(id);
         if (order != null)
         {
-            await _orderRepository.DeleteAsync(order);
-            await _orderRepository.SaveChangesAsync();
+            await _unitOfWork.Orders.DeleteAsync(order);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

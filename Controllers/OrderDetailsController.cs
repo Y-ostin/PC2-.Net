@@ -1,0 +1,63 @@
+using Microsoft.AspNetCore.Mvc;
+using S8_Yostin_Arequipa.DTOs;
+using S8_Yostin_Arequipa.Services.Interfaces;
+
+namespace S8_Yostin_Arequipa.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class OrderDetailsController : ControllerBase
+{
+    private readonly IOrderDetailService _orderDetailService;
+
+    public OrderDetailsController(IOrderDetailService orderDetailService)
+    {
+        _orderDetailService = orderDetailService;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        var orderDetails = await _orderDetailService.GetAllOrderDetailsAsync();
+        return Ok(orderDetails);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(int id)
+    {
+        var orderDetail = await _orderDetailService.GetOrderDetailByIdAsync(id);
+        if (orderDetail == null) return NotFound();
+        return Ok(orderDetail);
+    }
+
+    [HttpGet("order/{orderId}")]
+    public async Task<IActionResult> GetByOrderId(int orderId)
+    {
+        var orderDetails = await _orderDetailService.GetOrderDetailsByOrderIdAsync(orderId);
+        return Ok(orderDetails);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] OrderDetailDto orderDetailDto)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        await _orderDetailService.AddOrderDetailAsync(orderDetailDto);
+        return CreatedAtAction(nameof(GetById), new { id = orderDetailDto.OrderDetailId }, orderDetailDto);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(int id, [FromBody] OrderDetailDto orderDetailDto)
+    {
+        if (id != orderDetailDto.OrderDetailId) return BadRequest();
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        await _orderDetailService.UpdateOrderDetailAsync(orderDetailDto);
+        return NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        await _orderDetailService.DeleteOrderDetailAsync(id);
+        return NoContent();
+    }
+}
