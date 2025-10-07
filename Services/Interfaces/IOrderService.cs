@@ -10,4 +10,6 @@ public interface IOrderService
     Task AddOrderAsync(OrderDto orderDto);
     Task UpdateOrderAsync(OrderDto orderDto);
     Task DeleteOrderAsync(int id);
+    Task<IEnumerable<OrderDto>> GetOrdersAfterDateAsync(DateTime date);
+    Task<IEnumerable<ProductSoldToClientDto>> GetProductsSoldToClientAsync(int clientId);
 }

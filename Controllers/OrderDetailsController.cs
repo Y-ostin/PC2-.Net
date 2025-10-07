@@ -37,6 +37,20 @@ public class OrderDetailsController : ControllerBase
         return Ok(orderDetails);
     }
 
+    [HttpGet("order/{orderId}/products")]
+    public async Task<IActionResult> GetProductDetailsByOrderId(int orderId)
+    {
+        var productDetails = await _orderDetailService.GetProductDetailsByOrderIdAsync(orderId);
+        return Ok(productDetails);
+    }
+
+    [HttpGet("order/{orderId}/total-quantity")]
+    public async Task<IActionResult> GetTotalQuantityByOrderId(int orderId)
+    {
+        var totalQuantity = await _orderDetailService.GetTotalQuantityByOrderIdAsync(orderId);
+        return Ok(totalQuantity);
+    }
+
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] OrderDetailDto orderDetailDto)
     {
@@ -59,5 +73,21 @@ public class OrderDetailsController : ControllerBase
     {
         await _orderDetailService.DeleteOrderDetailAsync(id);
         return NoContent();
+    }
+
+    // 10: Obtener todos los pedidos con sus detalles (nombre del producto y cantidad)
+    [HttpGet("all-with-details")]
+    public async Task<ActionResult<IEnumerable<OrderWithDetailsDto>>> GetAllOrdersWithDetails()
+    {
+        var result = await _orderDetailService.GetAllOrdersWithDetailsAsync();
+        return Ok(result);
+    }
+
+    // 12: Obtener todos los clientes que han comprado un producto específico
+    [HttpGet("product/{productId}/clients")]
+    public async Task<ActionResult<IEnumerable<ClientWhoBoughtProductDto>>> GetClientsWhoBoughtProduct(int productId)
+    {
+        var clients = await _orderDetailService.GetClientsWhoBoughtProductAsync(productId);
+        return Ok(clients);
     }
 }

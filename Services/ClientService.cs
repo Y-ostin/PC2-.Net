@@ -92,4 +92,20 @@ public class ClientService : IClientService
             Email = c.Email
         });
     }
+
+    // 9: Obtener el cliente con mayor número de pedidos
+    public async Task<ClientOrderCountDto?> GetClientWithMostOrdersAsync()
+    {
+        var result = await _unitOfWork.Clients.GetClientWithMostOrdersAsync();
+        
+        if (result == null)
+            return null;
+
+        return new ClientOrderCountDto
+        {
+            ClientId = result.Value.ClientId,
+            ClientName = result.Value.ClientName,
+            OrderCount = result.Value.OrderCount
+        };
+    }
 }

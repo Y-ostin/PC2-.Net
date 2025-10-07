@@ -68,4 +68,15 @@ public class ClientsController : ControllerBase
         await _clientService.DeleteClientAsync(id);
         return NoContent();
     }
+
+    // 9: Obtener el cliente con mayor número de pedidos
+    [HttpGet("most-orders")]
+    public async Task<ActionResult<ClientOrderCountDto>> GetClientWithMostOrders()
+    {
+        var result = await _clientService.GetClientWithMostOrdersAsync();
+        if (result == null)
+            return NotFound("No clients found");
+        
+        return Ok(result);
+    }
 }

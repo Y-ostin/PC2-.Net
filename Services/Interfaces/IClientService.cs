@@ -11,4 +11,5 @@ public interface IClientService
     Task AddClientAsync(ClientDto clientDto);
     Task UpdateClientAsync(ClientDto clientDto);
     Task DeleteClientAsync(int id);
+    Task<ClientOrderCountDto?> GetClientWithMostOrdersAsync();
 }

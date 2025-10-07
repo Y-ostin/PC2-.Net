@@ -60,4 +60,20 @@ public class OrdersController : ControllerBase
         await _orderService.DeleteOrderAsync(id);
         return NoContent();
     }
+
+    // 6: Obtener todos los pedidos realizados después de una fecha específica
+    [HttpGet("after-date")]
+    public async Task<ActionResult<IEnumerable<OrderDto>>> GetOrdersAfterDate([FromQuery] DateTime date)
+    {
+        var orders = await _orderService.GetOrdersAfterDateAsync(date);
+        return Ok(orders);
+    }
+
+    // 11: Obtener todos los productos vendidos a un cliente específico
+    [HttpGet("client/{clientId}/products")]
+    public async Task<ActionResult<IEnumerable<ProductSoldToClientDto>>> GetProductsSoldToClient(int clientId)
+    {
+        var products = await _orderService.GetProductsSoldToClientAsync(clientId);
+        return Ok(products);
+    }
 }

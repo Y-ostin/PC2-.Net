@@ -37,6 +37,13 @@ public class ProductsController : ControllerBase
         return Ok(products);
     }
 
+    [HttpGet("price-greater-than/{price}")]
+    public async Task<IActionResult> GetProductsWithPriceGreaterThan(decimal price)
+    {
+        var products = await _productService.GetProductsWithPriceGreaterThanAsync(price);
+        return Ok(products);
+    }
+
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] ProductDto productDto)
     {
@@ -59,5 +66,21 @@ public class ProductsController : ControllerBase
     {
         await _productService.DeleteProductAsync(id);
         return NoContent();
+    }
+
+    // 7: Obtener el promedio de precio de los productos
+    [HttpGet("average-price")]
+    public async Task<ActionResult<decimal>> GetAveragePrice()
+    {
+        var averagePrice = await _productService.GetAveragePriceAsync();
+        return Ok(new { AveragePrice = averagePrice });
+    }
+
+    // 8: Obtener todos los productos sin descripción
+    [HttpGet("without-description")]
+    public async Task<ActionResult<IEnumerable<ProductDto>>> GetProductsWithoutDescription()
+    {
+        var products = await _productService.GetProductsWithoutDescriptionAsync();
+        return Ok(products);
     }
 }

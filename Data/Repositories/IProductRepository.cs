@@ -6,4 +6,8 @@ public interface IProductRepository : IRepository<Product>
 {
     // Métodos específicos para Product
     Task<IEnumerable<Product>> GetByPriceRangeAsync(decimal minPrice, decimal maxPrice);
+    Task<IEnumerable<Product>> GetProductsWithPriceGreaterThanAsync(decimal price);
+    Task<Product?> GetMostExpensiveProductAsync();
+    Task<decimal> GetAveragePriceAsync();
+    Task<IEnumerable<Product>> GetProductsWithoutDescriptionAsync();
 }

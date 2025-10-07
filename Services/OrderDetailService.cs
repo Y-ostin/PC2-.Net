@@ -76,6 +76,28 @@ public class OrderDetailService : IOrderDetailService
         }
     }
 
+    // 3: Obtener detalles de productos en una orden
+    public async Task<IEnumerable<ProductDetailInOrderDto>> GetProductDetailsByOrderIdAsync(int orderId)
+    {
+        var productDetails = await _unitOfWork.OrderDetails.GetProductDetailsByOrderIdAsync(orderId);
+        return productDetails.Select(pd => new ProductDetailInOrderDto
+        {
+            ProductName = ((dynamic)pd).ProductName,
+            Quantity = ((dynamic)pd).Quantity
+        });
+    }
+
+    // 4: Obtener cantidad total de productos por orden
+    public async Task<OrderTotalQuantityDto> GetTotalQuantityByOrderIdAsync(int orderId)
+    {
+        var totalQuantity = await _unitOfWork.OrderDetails.GetTotalQuantityByOrderIdAsync(orderId);
+        return new OrderTotalQuantityDto
+        {
+            OrderId = orderId,
+            TotalQuantity = totalQuantity
+        };
+    }
+
     public async Task DeleteOrderDetailAsync(int id)
     {
         var orderDetail = await _unitOfWork.OrderDetails.GetByIdAsync(id);
@@ -84,5 +106,17 @@ public class OrderDetailService : IOrderDetailService
             await _unitOfWork.OrderDetails.DeleteAsync(orderDetail);
             await _unitOfWork.SaveChangesAsync();
         }
+    }
+
+    // 10: Obtener todos los pedidos con sus detalles
+    public async Task<IEnumerable<OrderWithDetailsDto>> GetAllOrdersWithDetailsAsync()
+    {
+        return await _unitOfWork.OrderDetails.GetAllOrdersWithDetailsAsync();
+    }
+
+    // 12: Obtener todos los clientes que han comprado un producto específico
+    public async Task<IEnumerable<ClientWhoBoughtProductDto>> GetClientsWhoBoughtProductAsync(int productId)
+    {
+        return await _unitOfWork.OrderDetails.GetClientsWhoBoughtProductAsync(productId);
     }
 }

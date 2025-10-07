@@ -80,4 +80,21 @@ public class OrderService : IOrderService
             await _unitOfWork.SaveChangesAsync();
         }
     }
+
+    public async Task<IEnumerable<OrderDto>> GetOrdersAfterDateAsync(DateTime date)
+    {
+        var orders = await _unitOfWork.Orders.GetOrdersAfterDateAsync(date);
+        return orders.Select(o => new OrderDto
+        {
+            OrderId = o.OrderId,
+            ClientId = o.ClientId,
+            OrderDate = o.OrderDate
+        });
+    }
+
+    // 11: Obtener todos los productos vendidos a un cliente específico
+    public async Task<IEnumerable<ProductSoldToClientDto>> GetProductsSoldToClientAsync(int clientId)
+    {
+        return await _unitOfWork.Orders.GetProductsSoldToClientAsync(clientId);
+    }
 }

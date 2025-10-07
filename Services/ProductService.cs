@@ -76,6 +76,18 @@ public class ProductService : IProductService
         }
     }
 
+    public async Task<IEnumerable<ProductDto>> GetProductsWithPriceGreaterThanAsync(decimal price)
+    {
+        var products = await _unitOfWork.Products.GetProductsWithPriceGreaterThanAsync(price);
+        return products.Select(p => new ProductDto
+        {
+            ProductId = p.ProductId,
+            Name = p.Name,
+            Description = p.Description,
+            Price = p.Price
+        });
+    }
+
     public async Task DeleteProductAsync(int id)
     {
         var product = await _unitOfWork.Products.GetByIdAsync(id);
@@ -84,5 +96,24 @@ public class ProductService : IProductService
             await _unitOfWork.Products.DeleteAsync(product);
             await _unitOfWork.SaveChangesAsync();
         }
+    }
+
+    // 7: Obtener el promedio de precio de los productos
+    public async Task<decimal> GetAveragePriceAsync()
+    {
+        return await _unitOfWork.Products.GetAveragePriceAsync();
+    }
+
+    // 8: Obtener todos los productos sin descripción
+    public async Task<IEnumerable<ProductDto>> GetProductsWithoutDescriptionAsync()
+    {
+        var products = await _unitOfWork.Products.GetProductsWithoutDescriptionAsync();
+        return products.Select(p => new ProductDto
+        {
+            ProductId = p.ProductId,
+            Name = p.Name,
+            Description = p.Description,
+            Price = p.Price
+        });
     }
 }
