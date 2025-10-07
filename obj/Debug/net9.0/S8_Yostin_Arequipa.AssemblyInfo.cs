@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("S8_Yostin_Arequipa")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+500ec24aa2f0fb4feb2403a7328ea1920f0a4220")]
 [assembly: System.Reflection.AssemblyProductAttribute("S8_Yostin_Arequipa")]
 [assembly: System.Reflection.AssemblyTitleAttribute("S8_Yostin_Arequipa")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
