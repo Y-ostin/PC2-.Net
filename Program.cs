@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore.MySql;
-using S8_Yostin_Arequipa.Models;
+using S8_Yostin_Arequipa.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

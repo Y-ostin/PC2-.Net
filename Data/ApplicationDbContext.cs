@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore.MySql.Scaffolding.Internal;
+using S8_Yostin_Arequipa.Models;
 
-namespace S8_Yostin_Arequipa.Models;
+namespace S8_Yostin_Arequipa.Data;
 
 public partial class ApplicationDbContext : DbContext
 {
