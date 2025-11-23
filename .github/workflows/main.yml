@@ -36,4 +36,4 @@ jobs:
 
     - name: Deploy to server (ejemplo de despliegue)
       run: |
-        scp -r ./published username@server:/path/to/deploy
+        scp -r ./published username@192.168.15.15:/path/to/deploy
